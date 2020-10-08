@@ -8,12 +8,9 @@ fn main() {
     let output_path = out_dir.join("usrsctp");
     let source_path = env::current_dir().unwrap().join("usrsctp");
 
-    build(&source_path, &build_path, &output_path);
-    println!("cargo:rustc-link-lib=usrsctp");
-    println!("cargo:rustc-link-search=native={}", output_path.join("lib").to_string_lossy());
-
-
     if !output_path.join("bindings.rs").exists() {
+        build(&source_path, &build_path, &output_path);
+
         let bindings = bindgen::Builder::default()
             .header_contents("wrapper.h", &String::from(format!("#include <{}/usrsctp.h>", output_path.join("include").to_string_lossy())))
             .whitelist_type("SCTP.+")
@@ -30,11 +27,14 @@ fn main() {
             .write_to_file(output_path.join("bindings.rs"))
             .expect("failed to write bindings");
     }
+
+    println!("cargo:rustc-link-lib=usrsctp");
+    println!("cargo:rustc-link-search=native={}", output_path.join("lib").to_string_lossy());
 }
 
 fn build(source_path: &PathBuf, build_path: &PathBuf, output_path: &PathBuf) {
     /* setup */
-    {
+    if !build_path.exists() {
         let mut command = Command::new("meson");
 
         command.arg("setup");
@@ -65,7 +65,7 @@ fn build(source_path: &PathBuf, build_path: &PathBuf, output_path: &PathBuf) {
             .success();
 
         if ! success {
-            panic!("Failed to compile/install libnice.");
+            panic!("Failed to compile/install libusrsctp.");
         }
     }
 }
