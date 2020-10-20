@@ -41,13 +41,13 @@ fn build(source_path: &PathBuf, build_path: &PathBuf, output_path: &PathBuf) {
         command.arg("--prefix");
         command.arg(&output_path);
         command.arg("-Dsctp_build_programs=false");
-        let value = env::var("usrsctp_build_type").unwrap_or_else(String::new());
-        match &value {
-            &String::from("static") => command.arg("-Ddefault_library=static"),
-            &String::from("shared") => command.arg("-Ddefault_library=shared"),
-            &String::new() => {  },
+        let value = env::var("usrsctp_build_type").unwrap_or(String::new());
+        match value.as_str() {
+            "static" => { command.arg("-Ddefault_library=static"); },
+            "shared" => { command.arg("-Ddefault_library=shared"); },
+            "" => {  },
             _ => panic!("Invalid build type: {:?}", value)
-        }
+        };
         command.arg(&build_path);
         command.arg(&source_path);
 
