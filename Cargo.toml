@@ -11,5 +11,8 @@ license = "LGPL-2.1 OR MPL-1.1"
 libc = "0.2"
 
 [build-dependencies]
-bindgen = "0.53"
+bindgen = { version = "0.53" }
 pkg-config = "0.3"
+
+[dependencies.bindgen]
+features = ["static"]
