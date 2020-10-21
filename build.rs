@@ -8,6 +8,7 @@ fn main() {
     let output_path = out_dir.join("usrsctp");
     let source_path = env::current_dir().unwrap().join("usrsctp");
 
+    build(&source_path, &build_path, &output_path);
     /*
     if !output_path.join("bindings.rs").exists() {
         build(&source_path, &build_path, &output_path);
