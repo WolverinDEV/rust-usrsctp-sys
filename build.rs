@@ -8,9 +8,7 @@ fn main() {
     let output_path = out_dir.join("usrsctp");
     let source_path = env::current_dir().unwrap().join("usrsctp");
 
-    if !output_path.exists() {
-        build(&source_path, &build_path, &output_path);
-    }
+    build(&source_path, &build_path, &output_path);
     /*
     if !output_path.join("bindings.rs").exists() {
         build(&source_path, &build_path, &output_path);
@@ -44,11 +42,16 @@ fn main() {
     }
 
     println!("cargo:rustc-link-lib=usrsctp");
+    println!("cargo:rerun-if-env-changed=usrsctp_build_type");
 }
 
 fn build(source_path: &PathBuf, build_path: &PathBuf, output_path: &PathBuf) {
+    if build_path.exists() {
+        std::fs::remove_dir_all(build_path).unwrap();
+    }
+
     /* setup */
-    if !build_path.exists() {
+    {
         let mut command = Command::new("meson");
 
         command.arg("setup");
