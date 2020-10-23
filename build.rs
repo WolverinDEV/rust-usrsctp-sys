@@ -8,7 +8,9 @@ fn main() {
     let output_path = out_dir.join("usrsctp");
     let source_path = env::current_dir().unwrap().join("usrsctp");
 
-    build(&source_path, &build_path, &output_path);
+    if !output_path.exists() {
+        build(&source_path, &build_path, &output_path);
+    }
     /*
     if !output_path.join("bindings.rs").exists() {
         build(&source_path, &build_path, &output_path);
@@ -30,9 +32,18 @@ fn main() {
             .expect("failed to write bindings");
     }
     */
+    if cfg!(windows) {
+        println!("cargo:rustc-link-search=native={}", output_path.join("lib").to_string_lossy());
+    } else {
+        let triplet = Command::new("gcc")
+            .arg("-dumpmachine")
+            .output().expect("failed to get host triplet")
+            .stdout;
+        let triplet = String::from_utf8(triplet).expect("invalid host triplet format");
+        println!("cargo:rustc-link-search=native={}", output_path.join("lib").join(triplet).to_string_lossy());
+    }
 
     println!("cargo:rustc-link-lib=usrsctp");
-    println!("cargo:rustc-link-search=native={}", output_path.join("lib").to_string_lossy());
 }
 
 fn build(source_path: &PathBuf, build_path: &PathBuf, output_path: &PathBuf) {
