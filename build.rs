@@ -42,7 +42,7 @@ fn main() {
     }
 
     println!("cargo:rustc-link-lib=usrsctp");
-    println!("cargo:rerun-if-env-changed=usrsctp_build_type");
+    //println!("cargo:rerun-if-env-changed=usrsctp_build_type");
 }
 
 fn build(source_path: &PathBuf, build_path: &PathBuf, output_path: &PathBuf) {
