@@ -3,12 +3,14 @@ use std::env;
 use build_utils::build::LibraryType;
 
 fn main() {
+    /*
     if let Ok(library) = pkg_config::Config::new()
         .atleast_version("1.0.0")
         .probe("usrsctp") {
         println!("Found usrsctp {} via pkgconfig.", library.version);
         return;
     }
+    */
 
     let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
     let output_path = out_dir.join("usrsctp");
