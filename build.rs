@@ -12,9 +12,6 @@ fn main() {
     }
     */
 
-    let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
-    let output_path = out_dir.join("usrsctp");
-
     let source = build_utils::source::BuildSourceGit::builder("https://github.com/sctplab/usrsctp.git".to_owned())
         /* We've to use a slightly older version since the newer version using the __NR_getrandom syscall which isn't supported on older kernels */
         .revision(Some("d6acf1e".to_owned()))
@@ -26,7 +23,6 @@ fn main() {
 
     let mut build_builder = build_utils::Build::builder()
         .name("usrsctp")
-        .install_prefix(output_path)
         .source(Box::new(source))
         .add_step(Box::new(meson));
 
