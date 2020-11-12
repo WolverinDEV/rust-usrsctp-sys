@@ -26,12 +26,6 @@ fn main() {
         .source(Box::new(source))
         .add_step(Box::new(meson));
 
-    #[cfg(windows)]
-    {
-        /* usrsctp has trouble building shared libraries on windows */
-        //build_builder = build_builder.library_type(LibraryType::Static);
-    }
-
     match build_builder.build().expect("failed to generate build").execute() {
         Ok(result) => {
             result.emit_cargo();
