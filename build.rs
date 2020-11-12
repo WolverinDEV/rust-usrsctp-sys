@@ -29,7 +29,7 @@ fn main() {
     #[cfg(windows)]
     {
         /* usrsctp has trouble building shared libraries on windows */
-        build_builder = build_builder.library_type(LibraryType::Static);
+        //build_builder = build_builder.library_type(LibraryType::Static);
     }
 
     match build_builder.build().expect("failed to generate build").execute() {
